@@ -1,13 +1,19 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { Menu } from 'semantic-ui-react'
 import { logout } from '../reducers/userReducer'
 import { setNotification } from '../reducers/notificationReducer'
 
-const Menu = (props) => {
+const NavBar = (props) => {
 
   const padding = {
     paddingRight: 5
+  }
+
+  const style = {
+    color: 'white',
+    fontWeight: '600'
   }
 
   const handleLogout = () => {
@@ -18,15 +24,20 @@ const Menu = (props) => {
 
   return (
     <div>
-      <Link style={padding} to="/">blogs</Link>
-      <Link style={padding} to="/users">users</Link>
-      {props.user === null ?
-        <div></div>
-        : <div>{props.user.name} is logged in
+      <Menu inverted>
+        <Menu.Item link>
+          <Link style={padding} to="/">blogs</Link>
+        </Menu.Item>
+        <Menu.Item link>
+          <Link style={padding} to="/users">users</Link>
+        </Menu.Item>
+        <Menu.Item link>
+          <em style={style}>{props.user.name} is logged in </em>
           <button onClick={() => handleLogout()}>
             logout
-          </button></div>
-      }
+          </button>
+        </Menu.Item>
+      </Menu>
     </div>
   )
 }
@@ -46,4 +57,4 @@ export default connect(
     logout,
     setNotification
   }
-)(Menu)
+)(NavBar)

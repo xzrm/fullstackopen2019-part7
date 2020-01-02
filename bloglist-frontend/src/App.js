@@ -9,6 +9,7 @@ import Notification from './components/Notification'
 import './App.css'
 import { initializeBlogs } from './reducers/blogReducer'
 import { setUser } from './reducers/userReducer'
+import { Container } from 'semantic-ui-react'
 import {
   BrowserRouter as Router,
   Route, Redirect, withRouter
@@ -28,21 +29,29 @@ const App = (props) => {
     }
   }, [])
 
-
-  return (
-    <div>
-      <Router>
-        <NavBar />
+  if (props.user === null) {
+    return (
+      <Container>
         <Notification />
         <LoginForm />
-        {props.user === null ?
-          <div></div> :
-          <div>
-            <BlogForm />
-            <Route exact path="/" render={() => <BlogList />} />
-          </div>
-        }
-      </Router>
+      </Container>
+    )
+  }
+
+  return (
+
+    <div>
+      <Container>
+        <Router>
+          <NavBar />
+          <Notification />
+          {/* <LoginForm /> */}
+
+          <BlogForm />
+          <Route exact path="/" render={() => <BlogList />} />
+
+        </Router>
+      </Container>
     </div>
   )
 }
