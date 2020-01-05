@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import blogService from './services/blogs'
 import BlogList from './components/BlogList'
 import UsersList from './components/UsersList'
-import BlogForm from './components/BlogForm'
 import User from './components/User'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
@@ -54,8 +53,6 @@ const App = (props) => {
           <NavBar />
           <Notification />
           {/* <LoginForm /> */}
-
-          <BlogForm />
           <Route exact path="/" render={() => <BlogList />} />
           <Route exact path="/users" render={() => <UsersList />} />
           <Route exact path="/users/:id" render={({ match }) =>

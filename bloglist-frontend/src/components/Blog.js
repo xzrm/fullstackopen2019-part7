@@ -1,20 +1,12 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { removeBlog, updateBlog } from '../reducers/blogReducer'
 
 // const BlogList = ({ blog, handleBlogChange, user, handleBlogRemove }) => {
 const Blog = (props) => {
-  const [visible, setVisible] = useState(false)
-
 
   const blog = props.blog
-
-  const showWhenVisible = { display: visible ? '' : 'none' }
-
-  const toggleVisiblity = () => {
-    setVisible(!visible)
-  }
 
   const handleLikeClick = async (blog) => {
     const likedBlog = { ...blog, likes: blog.likes + 1 }
@@ -34,36 +26,33 @@ const Blog = (props) => {
   }
 
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
-  }
-
 
   const toggleRemoveButton = (blog) => {
-    return ({ display: blog.user.username === props.user.username  ? '' : 'none' })
+    return ({ display: blog.user.username === props.user.username ? '' : 'none' })
   }
 
+  if (blog === undefined) {
+    return null
+  }
+
+
   return (
-    <div >
-      <div key={blog.id} style={blogStyle} className='blog'>
-        <div onClick={toggleVisiblity}>
-          {blog.title} {blog.author}
-        </div>
-        <div style={showWhenVisible} className="togglableContent">
-          {blog.url} <br />
+    <div key={blog.id} className='blog' >
+      <div >
+        <h3>{blog.title} {blog.author}</h3>
+      </div>
+      <div>
+        <div>{blog.url} <br /></div>
+        <div>
           {blog.likes} likes
-          <button onClick={() => handleLikeClick(blog)}>like</button><br />
+        <button onClick={() => handleLikeClick(blog)}>like</button><br />
           added by {blog.user.name}<br />
           <div style={toggleRemoveButton(blog)}>
             <button onClick={() => handleBlogRemove(blog)}>remove</button>
           </div>
         </div>
       </div>
-    </div>
+    </div >
   )
 }
 

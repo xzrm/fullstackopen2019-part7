@@ -1,28 +1,30 @@
 import React from 'react'
+import BlogForm from './BlogForm'
 import { connect } from 'react-redux'
 import { removeBlog, updateBlog } from '../reducers/blogReducer'
 import { Link } from 'react-router-dom'
-// import Blog from './Blog'
 
 const BlogList = (props) => {
 
   const byLikes = (b1, b2) => b2.likes - b1.likes
 
+  const blogStyle = {
+    paddingTop: 10,
+    paddingLeft: 2,
+    border: 'solid',
+    borderWidth: 1,
+    marginBottom: 5
+  }
+
   return (
     <div >
       <h2>blogs</h2>
-      <table>
-        <tbody>
-          {props.blogs.sort(byLikes).map(blog =>
-            <tr key={blog.id}>
-              <td><Link to={`blogs/${blog.id}`}>{blog.title}</Link></td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-      {/* {props.blogs.sort(byLikes).map(blog => {
-        <Blog key={blog.id} blog={blog} />
-      })} */}
+      <BlogForm />
+      {props.blogs.sort(byLikes).map(blog =>
+        <div key={blog.id} style={blogStyle}>
+          <Link to={`blogs/${blog.id}`}>{blog.title}</Link>
+        </div>
+      )}
 
     </div>
   )
