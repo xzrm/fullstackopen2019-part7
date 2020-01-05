@@ -2,17 +2,21 @@ import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import blogService from './services/blogs'
 import BlogList from './components/BlogList'
+import UsersList from './components/UsersList'
 import BlogForm from './components/BlogForm'
+import User from './components/User'
+import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import NavBar from './components/NavBar'
 import Notification from './components/Notification'
 import './App.css'
 import { initializeBlogs } from './reducers/blogReducer'
 import { setUser } from './reducers/userReducer'
+import { getUsers } from './reducers/usersReducer'
 import { Container } from 'semantic-ui-react'
 import {
   BrowserRouter as Router,
-  Route, Redirect, withRouter
+  Route
 } from 'react-router-dom'
 
 
@@ -21,6 +25,7 @@ const App = (props) => {
 
   useEffect(() => {
     props.initializeBlogs()
+    props.getUsers()
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
@@ -38,6 +43,9 @@ const App = (props) => {
     )
   }
 
+  const findById = (collection, id) =>
+    collection.find(u => u.id === id)
+
   return (
 
     <div>
@@ -49,7 +57,11 @@ const App = (props) => {
 
           <BlogForm />
           <Route exact path="/" render={() => <BlogList />} />
-
+          <Route exact path="/users" render={() => <UsersList />} />
+          <Route exact path="/users/:id" render={({ match }) =>
+            <User user={findById(props.users, match.params.id)} />} />
+          <Route exact path="/blogs/:id" render={({ match }) =>
+            <Blog blog={findById(props.blogs, match.params.id)} />} />
         </Router>
       </Container>
     </div>
@@ -60,7 +72,8 @@ const mapStateToProps = (state) => {
   return {
     blogs: state.blogs,
     notification: state.notification,
-    user: state.user
+    user: state.user,
+    users: state.users
   }
 }
 
@@ -69,6 +82,7 @@ export default connect(
   mapStateToProps,
   {
     initializeBlogs,
-    setUser
+    setUser,
+    getUsers
   }
 )(App)

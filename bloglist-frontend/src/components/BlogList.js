@@ -1,7 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { removeBlog, updateBlog } from '../reducers/blogReducer'
-import Blog from './Blog'
+import { Link } from 'react-router-dom'
+// import Blog from './Blog'
 
 const BlogList = (props) => {
 
@@ -10,9 +11,19 @@ const BlogList = (props) => {
   return (
     <div >
       <h2>blogs</h2>
-      {props.blogs.sort(byLikes).map(blog =>
+      <table>
+        <tbody>
+          {props.blogs.sort(byLikes).map(blog =>
+            <tr key={blog.id}>
+              <td><Link to={`blogs/${blog.id}`}>{blog.title}</Link></td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+      {/* {props.blogs.sort(byLikes).map(blog => {
         <Blog key={blog.id} blog={blog} />
-      )}
+      })} */}
+
     </div>
   )
 }

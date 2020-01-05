@@ -31,7 +31,7 @@ const BlogForm = (props) => {
 
   return (
     <div>
-      <Togglable buttonLabel="new note">
+      <Togglable buttonLabel="new blog">
         <h2>create new</h2>
         <form onSubmit={handleAddBlog}>
           <div>

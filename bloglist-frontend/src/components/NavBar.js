@@ -23,22 +23,20 @@ const NavBar = (props) => {
   }
 
   return (
-    <div>
-      <Menu inverted>
-        <Menu.Item link>
-          <Link style={padding} to="/">blogs</Link>
-        </Menu.Item>
-        <Menu.Item link>
-          <Link style={padding} to="/users">users</Link>
-        </Menu.Item>
-        <Menu.Item link>
-          <em style={style}>{props.user.name} is logged in </em>
-          <button onClick={() => handleLogout()}>
-            logout
-          </button>
-        </Menu.Item>
-      </Menu>
-    </div>
+    <Menu inverted>
+      <Menu.Item link>
+        <Link style={padding} to="/">blogs</Link>
+      </Menu.Item>
+      <Menu.Item link>
+        <Link style={padding} to="/users">users</Link>
+      </Menu.Item>
+      <Menu.Item link>
+        <em style={style}>{props.user.name} is logged in </em>
+        <button onClick={() => handleLogout()}>
+          logout
+        </button>
+      </Menu.Item>
+    </Menu>
   )
 }
 

@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { removeBlog, updateBlog } from '../reducers/blogReducer'
 
 // const BlogList = ({ blog, handleBlogChange, user, handleBlogRemove }) => {
-const BlogList = (props) => {
+const Blog = (props) => {
   const [visible, setVisible] = useState(false)
 
 
@@ -67,6 +67,8 @@ const BlogList = (props) => {
   )
 }
 
+
+
 const mapStateToProps = (state) => {
   return {
     blogs: state.blogs,
@@ -75,7 +77,7 @@ const mapStateToProps = (state) => {
   }
 }
 
-BlogList.propTypes = {
+Blog.propTypes = {
   blog: PropTypes.object,
   user: PropTypes.object,
   handleBlogChange: PropTypes.func,
@@ -88,4 +90,4 @@ export default connect(
     removeBlog,
     updateBlog
   }
-)(BlogList)
+)(Blog)
