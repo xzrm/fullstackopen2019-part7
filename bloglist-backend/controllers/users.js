@@ -44,7 +44,6 @@ usersRouter.get('/:id', async (request, response, next) => {
     } else {
       response.status(204).end()
     }
-	
   } catch (exception) {
     next(exception)
   }
