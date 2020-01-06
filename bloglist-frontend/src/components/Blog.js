@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { removeBlog, updateBlog } from '../reducers/blogReducer'
+import { removeBlog, updateBlog, addComment } from '../reducers/blogReducer'
 
 // const BlogList = ({ blog, handleBlogChange, user, handleBlogRemove }) => {
 const Blog = (props) => {
@@ -26,7 +26,6 @@ const Blog = (props) => {
   }
 
 
-
   const toggleRemoveButton = (blog) => {
     return ({ display: blog.user.username === props.user.username ? '' : 'none' })
   }
@@ -34,6 +33,31 @@ const Blog = (props) => {
   if (blog === undefined) {
     return null
   }
+
+  const showComments = (blog) => {
+    if (blog.comments.length > 0) {
+      return (
+        <ul>
+          {blog.comments.map(comment =>
+            <li key={comment.id}> {comment}</li>)}
+        </ul>
+      )
+    } else {
+      return (<div>no comments</div>)
+    }
+  }
+
+  const addComment = (event) => {
+    event.preventDefault()
+
+    const comment = event.target.comment.value
+
+    event.target.comment.value = ''
+    if (comment.trim().length !== 0) {
+      props.addComment(blog.id, comment)
+    }
+  }
+
 
 
   return (
@@ -49,6 +73,16 @@ const Blog = (props) => {
           added by {blog.user.name}<br />
           <div style={toggleRemoveButton(blog)}>
             <button onClick={() => handleBlogRemove(blog)}>remove</button>
+          </div>
+          <div>
+            <h4>comments:</h4>
+            <form onSubmit={addComment}>
+              <div>
+                <input name='comment' />
+              </div>
+              <button type="submit">add comment</button>
+            </form>
+            {showComments(blog)}
           </div>
         </div>
       </div>
@@ -77,6 +111,7 @@ export default connect(
   mapStateToProps,
   {
     removeBlog,
-    updateBlog
+    updateBlog,
+    addComment
   }
 )(Blog)
