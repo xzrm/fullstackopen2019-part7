@@ -12,11 +12,12 @@ import './App.css'
 import { initializeBlogs } from './reducers/blogReducer'
 import { setUser } from './reducers/userReducer'
 import { getUsers } from './reducers/usersReducer'
-import { Container } from 'semantic-ui-react'
+import { Container, Segment } from 'semantic-ui-react'
 import {
   BrowserRouter as Router,
   Route
 } from 'react-router-dom'
+
 
 
 const App = (props) => {
@@ -45,21 +46,23 @@ const App = (props) => {
   const findById = (collection, id) =>
     collection.find(u => u.id === id)
 
-  return (
 
+
+  return (
     <div>
       <Container>
-        <Router>
-          <NavBar />
-          <Notification />
-          {/* <LoginForm /> */}
-          <Route exact path="/" render={() => <BlogList />} />
-          <Route exact path="/users" render={() => <UsersList />} />
-          <Route exact path="/users/:id" render={({ match }) =>
-            <User user={findById(props.users, match.params.id)} />} />
-          <Route exact path="/blogs/:id" render={({ match }) =>
-            <Blog blog={findById(props.blogs, match.params.id)} />} />
-        </Router>
+        <Segment basic>
+          <Router>
+            <NavBar />
+            <Notification />
+            <Route exact path="/" render={() => <BlogList />} />
+            <Route exact path="/users" render={() => <UsersList />} />
+            <Route exact path="/users/:id" render={({ match }) =>
+              <User user={findById(props.users, match.params.id)} />} />
+            <Route exact path="/blogs/:id" render={({ match }) =>
+              <Blog blog={findById(props.blogs, match.params.id)} />} />
+          </Router>
+        </Segment>
       </Container>
     </div>
   )

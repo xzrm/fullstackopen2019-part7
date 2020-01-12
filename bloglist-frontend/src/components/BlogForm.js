@@ -4,6 +4,7 @@ import { createBlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 import { initializeBlogs } from '../reducers/blogReducer'
 import Togglable from './Togglable'
+import { Button, Form } from 'semantic-ui-react'
 
 
 const BlogForm = (props) => {
@@ -32,22 +33,22 @@ const BlogForm = (props) => {
   return (
     <div>
       <Togglable buttonLabel="new blog">
-        <h2>create new</h2>
-        <form onSubmit={handleAddBlog}>
-          <div>
-            title
-            <input name='title' />
-          </div>
-          <div>
-            author
-            <input name='author' />
-          </div>
-          <div>
-            url
-            <input name='url' />
-          </div>
-          <button type="submit">create</button>
-        </form>
+        <h3>create new</h3>
+        <Form onSubmit={handleAddBlog} size='mini'>
+          <Form.Field >
+            <label>title</label>
+            <Form.Input id='title' placeholder='title' name='title' />
+          </Form.Field>
+          <Form.Field>
+            <label>author</label>
+            <Form.Input id='author' placeholder='author' name='author' />
+          </Form.Field>
+          <Form.Field>
+            <label>url</label>
+            <Form.Input id='url' placeholder='url' name='url' />
+          </Form.Field>
+          <Button id='createButton' type="submit" size='small'>create</Button>
+        </Form>
       </Togglable>
     </div>
   )

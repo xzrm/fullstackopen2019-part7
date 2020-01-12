@@ -1,6 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { Header, Table } from 'semantic-ui-react'
+
 
 
 
@@ -9,20 +11,33 @@ const UsersList = (props) => {
   return (
     <div>
       <h2>Users</h2>
-      <table>
-        <tbody>
-          <tr>
-            <th></th>
-            <th>blogs created</th>
-          </tr>
+      <Table basic='very' celled collapsing>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell>users</Table.HeaderCell>
+            <Table.HeaderCell>blogs created</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
           {props.users.map(user =>
-            <tr key={user.id}>
-              <td><Link to={`users/${user.id}`}>{user.name}</Link></td>
-              <td>{user.blogs.length}</td>
-            </tr>
+            <Table.Row key={user.id}>
+              <Table.Cell>
+                <Header as='h4'>
+                  <Header.Content>
+                    <Link to={`users/${user.id}`}>
+                      {user.name}
+                    </Link>
+                    <Header.Subheader>{user.username}</Header.Subheader>
+                  </Header.Content>
+                </Header>
+              </Table.Cell>
+              <Table.Cell>
+                {user.blogs.length}
+              </Table.Cell>
+            </Table.Row>
           )}
-        </tbody>
-      </table>
+        </Table.Body>
+      </Table>
 
 
     </div>

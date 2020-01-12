@@ -1,12 +1,19 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { removeBlog, updateBlog, addComment } from '../reducers/blogReducer'
-
+import { withRouter } from 'react-router-dom'
+import { Segment, Button, Form } from 'semantic-ui-react'
 // const BlogList = ({ blog, handleBlogChange, user, handleBlogRemove }) => {
-const Blog = (props) => {
+const BlogNoHistory = (props) => {
 
   const blog = props.blog
+
+  const [visible, setVisible] = useState(true)
+
+  const toggleVisiblity = () => {
+    setVisible(!visible)
+  }
 
   const handleLikeClick = async (blog) => {
     const likedBlog = { ...blog, likes: blog.likes + 1 }
@@ -22,6 +29,7 @@ const Blog = (props) => {
   const handleBlogRemove = async (blogToDelete) => {
     if (window.confirm(`remove blog ${blogToDelete.title} by ${blogToDelete.author}?`)) {
       props.removeBlog(blogToDelete.id)
+      props.history.push('/')
     }
   }
 
@@ -29,6 +37,7 @@ const Blog = (props) => {
   const toggleRemoveButton = (blog) => {
     return ({ display: blog.user.username === props.user.username ? '' : 'none' })
   }
+
 
   if (blog === undefined) {
     return null
@@ -62,34 +71,55 @@ const Blog = (props) => {
 
   return (
     <div key={blog.id} className='blog' >
-      <div >
-        <h3>{blog.title} {blog.author}</h3>
-      </div>
-      <div>
-        <div>{blog.url} <br /></div>
-        <div>
-          {blog.likes} likes
-        <button onClick={() => handleLikeClick(blog)}>like</button><br />
-          added by {blog.user.name}<br />
-          <div style={toggleRemoveButton(blog)}>
-            <button onClick={() => handleBlogRemove(blog)}>remove</button>
-          </div>
-          <div>
-            <h4>comments:</h4>
-            <form onSubmit={addComment}>
-              <div>
-                <input name='comment' />
-              </div>
-              <button type="submit">add comment</button>
-            </form>
+      <Segment vertical>
+        <Segment.Group>
+          <Segment>{blog.title} {blog.author}</Segment>
+          <Segment.Group>
+            <Segment>{blog.url}</Segment>
+            <Segment>{blog.likes} likes</Segment>
+            <Segment>added by {blog.user.name}</Segment>
+          </Segment.Group>
+          <Segment.Group horizontal>
+            <Segment basic>
+              <Button onClick={() => handleLikeClick(blog)}>
+                like
+              </Button>
+            </Segment>
+            <Segment basic>
+              <Button onClick={() => toggleVisiblity()}>
+                comment
+              </Button>
+            </Segment>
+            <div style={toggleRemoveButton(blog)}>
+              <Segment basic>
+                <Button
+                  onClick={() => handleBlogRemove(blog)}>
+                  remove
+                </Button>
+              </Segment>
+            </div>
+          </Segment.Group>
+          <Segment>
+            <div style={{ display: visible ? 'none' : '' }}>
+              <Form onSubmit={addComment}>
+                <Form.Field>
+                  <label>Add comment</label>
+                  <Form.Input name='comment' />
+                  <Button type="submit">
+                    submit
+                  </Button>
+                </Form.Field>
+              </Form>
+            </div>
             {showComments(blog)}
-          </div>
-        </div>
-      </div>
+          </Segment>
+        </Segment.Group>
+      </Segment>
     </div >
   )
 }
 
+const Blog = withRouter(BlogNoHistory)
 
 
 const mapStateToProps = (state) => {

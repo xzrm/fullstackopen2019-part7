@@ -1,9 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { Menu } from 'semantic-ui-react'
 import { logout } from '../reducers/userReducer'
 import { setNotification } from '../reducers/notificationReducer'
+
+import { Menu, Button } from 'semantic-ui-react'
 
 const NavBar = (props) => {
 
@@ -11,10 +12,6 @@ const NavBar = (props) => {
     paddingRight: 5
   }
 
-  const style = {
-    color: 'white',
-    fontWeight: '600'
-  }
 
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogAppUser')
@@ -23,19 +20,22 @@ const NavBar = (props) => {
   }
 
   return (
-    <Menu inverted>
+    <Menu>
       <Menu.Item link>
         <Link style={padding} to="/">blogs</Link>
       </Menu.Item>
       <Menu.Item link>
         <Link style={padding} to="/users">users</Link>
       </Menu.Item>
-      <Menu.Item link>
-        <em style={style}>{props.user.name} is logged in </em>
-        <button onClick={() => handleLogout()}>
-          logout
-        </button>
+      <Menu.Item position='right'>
+        <em>{props.user.name} is logged in </em>
+
+        <Button style={{ marginLeft: '0.5em' }}
+          onClick={() => handleLogout()}>
+          Log out
+        </Button>
       </Menu.Item>
+
     </Menu>
   )
 }

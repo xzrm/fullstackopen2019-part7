@@ -1,12 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { Message } from 'semantic-ui-react'
+
 
 const Notification = (props) => {
-  const style = {
-    border: 'solid',
-    padding: 10,
-    borderWidth: 1
-  }
 
   const notificationToDisplay = props.notification
 
@@ -14,9 +11,11 @@ const Notification = (props) => {
     <div>
       {notificationToDisplay === '' ?
         <div></div> :
-        <div style={style}>
-          {notificationToDisplay}
-        </div>
+        <Message>
+          <p>
+            {notificationToDisplay}
+          </p>
+        </Message>
       }
     </div>
   )

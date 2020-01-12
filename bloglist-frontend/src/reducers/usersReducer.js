@@ -4,9 +4,10 @@ import usersService from '../services/users'
 const usersReducer = (state = [], action) => {
   switch (action.type) {
     case 'GET_USERS':
-    return action.data
+      return action.data
+    default:
+      return state
   }
-  return state
 }
 
 export const getUsers = () => {

@@ -8,19 +8,27 @@ const userReducer = (state = null, action) => {
     return action.data
   case 'LOGOUT_USER':
     return action.data
+  default:
+    return state
   }
-  return state
+
 }
 
 export const login = (credentials) => {
   return async dispatch => {
-    const user = await loginService.login(credentials)
-    window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
-    blogService.setToken(user.token)
-    dispatch({
-      type: 'SET_USER',
-      data: user
-    })
+    try {
+      const user = await loginService.login(credentials)
+      window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
+      blogService.setToken(user.token)
+      dispatch({
+        type: 'SET_USER',
+        data: user
+      })
+      return (user)
+    } catch (exception) {
+      console.log('exception is thrown')
+      return undefined
+    }
   }
 }
 
