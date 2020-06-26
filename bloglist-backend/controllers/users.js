@@ -36,6 +36,19 @@ usersRouter.get('/', async (request, response) => {
   response.json(users.map(u => u.toJSON()))
 })
 
+usersRouter.get('/:id', async (request, response, next) => {
+  try {
+    const searchedUser = await User.findById(request.params.id)
+    if (searchedUser) {
+      response.json(searchedUser.toJSON())
+    } else {
+      response.status(204).end()
+    }
+  } catch (exception) {
+    next(exception)
+  }
+})
+
 
 
 

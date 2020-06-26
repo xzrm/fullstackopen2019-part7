@@ -1,4 +1,4 @@
-import userService from '../services/login'
+import loginService from '../services/login'
 import blogService from '../services/blogs'
 
 const userReducer = (state = null, action) => {
@@ -8,19 +8,27 @@ const userReducer = (state = null, action) => {
     return action.data
   case 'LOGOUT_USER':
     return action.data
+  default:
+    return state
   }
-  return state
+
 }
 
 export const login = (credentials) => {
   return async dispatch => {
-    const user = await userService.login(credentials)
-    window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
-    blogService.setToken(user.token)
-    dispatch({
-      type: 'SET_USER',
-      data: user
-    })
+    try {
+      const user = await loginService.login(credentials)
+      window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
+      blogService.setToken(user.token)
+      dispatch({
+        type: 'SET_USER',
+        data: user
+      })
+      return (user)
+    } catch (exception) {
+      console.log('exception is thrown')
+      return undefined
+    }
   }
 }
 
@@ -39,7 +47,6 @@ export const setUser = (user) => {
     })
   }
 }
-
 
 
 export default userReducer

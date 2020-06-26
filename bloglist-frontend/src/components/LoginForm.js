@@ -1,9 +1,12 @@
 import React from 'react'
-import { connect } from 'react-redux'
-import { login, logout } from '../reducers/userReducer'
+import { useDispatch, useSelector } from 'react-redux'
+import { login } from '../reducers/userReducer'
 import { setNotification } from '../reducers/notificationReducer'
+import { Button, Form, Grid, Header, Segment } from 'semantic-ui-react'
 
-const LoginForm = (props) => {
+const LoginForm = () => {
+
+  const dispatch = useDispatch()
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -16,52 +19,47 @@ const LoginForm = (props) => {
     event.target.username = ''
     event.target.password = ''
 
-    try {
-      props.login(credentials)
-      props.setNotification('you are successfully logged in', 5000)
 
-    } catch (exception) {
-      props.setNotification('wrong username or password', 5000)
-      console.log(exception)
+    const loggedUser = await dispatch(login(credentials))
+
+    if (loggedUser === undefined) {
+      dispatch(setNotification('wrong username or password', 5000))
+      return
     }
+    dispatch(setNotification('you are successfully logged in', 5000))
   }
 
 
+  const loggedUser = useSelector(state => state.user)
+
 
   return (
-    props.user === null ?
-      <div>
-        <h2>log in to application</h2>
+    loggedUser === null ?
 
-        <form onSubmit={handleLogin} className='Login'>
-          <div>
-            username
-            <input name='username' />
-          </div>
-          <div>
-            password
-            <input name='password' type='password' />
-          </div>
-          <button type="submit">login</button>
-        </form>
-      </div>
+      <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
+        <Grid.Column style={{ maxWidth: 450 }}>
+          <Header as='h2' textAlign='center'>
+            Log-in to your account
+          </Header>
+          <Form onSubmit={handleLogin} className='Login' size='large'>
+            <Segment raised>
+              <Form.Field >
+                <label>username</label>
+                <Form.Input id='username' fluid icon='user' iconPosition='left' placeholder='username ' name='username' />
+              </Form.Field>
+              <Form.Field>
+                <label>password</label>
+                <Form.Input id='password' fluid icon='lock' iconPosition='left' placeholder='password' name='password' type='password' />
+              </Form.Field>
+              <Button type="submit" fluid size='large'>
+                login
+              </Button>
+            </Segment>
+          </Form>
+        </Grid.Column>
+      </Grid>
       : <div></div>
   )
 }
 
-const mapStateToProps = (state) => {
-  return {
-    blogs: state.blogs,
-    notification: state.notification,
-    user: state.user
-  }
-}
-
-export default connect(
-  mapStateToProps,
-  {
-    login,
-    logout,
-    setNotification
-  }
-)(LoginForm)
+export default LoginForm

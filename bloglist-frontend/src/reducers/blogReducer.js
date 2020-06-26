@@ -12,10 +12,20 @@ const blogReducer = (state = [], action) => {
   case 'UPDATE_BLOG':
     // eslint-disable-next-line no-case-declarations
     const likedBlog = action.data
-    return state.map(blog => blog.id !== likedBlog.id ?
-      blog : likedBlog)
+    return state.map(blog =>
+      blog.id !== likedBlog.id
+        ? blog
+        : likedBlog)
+  case 'ADD_COMMENT':
+    // eslint-disable-next-line no-case-declarations
+    const commentedBlog = action.data
+    return state.map(blog =>
+      blog.id !== commentedBlog.id
+        ? blog
+        : commentedBlog)
+  default:
+    return state
   }
-  return state
 }
 
 export const createBlog = (blogObject) => {
@@ -55,6 +65,17 @@ export const removeBlog = (id) => {
     dispatch({
       type: 'DEL_BLOG',
       data: { id }
+    })
+  }
+}
+
+export const addComment = (id, comment) => {
+  return async dispatch => {
+    const updatedBlog = await blogService.addComment(id, comment)
+    console.log('id:', id)
+    dispatch({
+      type: 'ADD_COMMENT',
+      data: updatedBlog
     })
   }
 }

@@ -1,35 +1,34 @@
 import React from 'react'
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
+import { Message } from 'semantic-ui-react'
 
-const Notification = (props) => {
-  const style = {
-    border: 'solid',
-    padding: 10,
-    borderWidth: 1
-  }
 
-  const notificationToDisplay = props.notification
+const Notification = () => {
+
+  const notificationToDisplay = useSelector(state => state.notification)
 
   return (
     <div>
       {notificationToDisplay === '' ?
         <div></div> :
-        <div style={style}>
-          {notificationToDisplay}
-        </div>
+        <Message>
+          <p>
+            {notificationToDisplay}
+          </p>
+        </Message>
       }
     </div>
   )
 }
 
-const mapStateToProps = (state) => {
-  return {
-    notification: state.notification
-  }
-}
+// const mapStateToProps = (state) => {
+//   return {
+//     notification: state.notification
+//   }
+// }
 
-const ConnectedNotification = connect(
-  mapStateToProps
-)(Notification)
+// const ConnectedNotification = connect(
+//   mapStateToProps
+// )(Notification)
 
-export default ConnectedNotification
+export default Notification

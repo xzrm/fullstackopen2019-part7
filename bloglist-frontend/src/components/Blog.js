@@ -1,16 +1,19 @@
 import React, { useState } from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { removeBlog, updateBlog } from '../reducers/blogReducer'
-
-// const BlogList = ({ blog, handleBlogChange, user, handleBlogRemove }) => {
-const BlogList = (props) => {
-  const [visible, setVisible] = useState(false)
+import { useHistory } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { removeBlog, updateBlog, addComment } from '../reducers/blogReducer'
+import { withRouter } from 'react-router-dom'
+import { Segment, Button, Form, Icon, Grid } from 'semantic-ui-react'
 
 
+const BlogNoHistory = (props) => {
+
+  const dispatch = useDispatch()
+  const loggedUser = useSelector(state => state.user)
   const blog = props.blog
+  const history = useHistory()
 
-  const showWhenVisible = { display: visible ? '' : 'none' }
+  const [visible, setVisible] = useState(true)
 
   const toggleVisiblity = () => {
     setVisible(!visible)
@@ -18,74 +21,102 @@ const BlogList = (props) => {
 
   const handleLikeClick = async (blog) => {
     const likedBlog = { ...blog, likes: blog.likes + 1 }
-    handleBlogChange(likedBlog)
-  }
-
-
-  const handleBlogChange = async (updatedBlog) => {
-    props.updateBlog(updatedBlog)
+    dispatch(updateBlog(likedBlog))
   }
 
 
   const handleBlogRemove = async (blogToDelete) => {
-    if (window.confirm(`remove blog ${blogToDelete.title} by ${blogToDelete.author}?`)) {
-      props.removeBlog(blogToDelete.id)
+    if (window.confirm(`remove blog ${blogToDelete.title}
+                      by ${blogToDelete.author}?`)) {
+      dispatch(removeBlog(blogToDelete.id))
+      history.push('/')
     }
   }
 
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
-  }
-
-
   const toggleRemoveButton = (blog) => {
-    return ({ display: blog.user.username === props.user.username  ? '' : 'none' })
+    return ({
+      display: blog.user.username === loggedUser.username
+        ? ''
+        : 'none'
+    })
   }
+
+
+  if (blog === undefined) {
+    return null
+  }
+
+  const commentsToShow = blog.comments.length > 0
+    ? <ul key={blog.id}>
+      {blog.comments.map(comment =>
+        <li key={comment.id}> {comment}</li>
+      )}
+    </ul >
+    : <div>no comments</div>
+
+
+  const addNewComment = (event) => {
+    event.preventDefault()
+    const comment = event.target.comment.value
+    event.target.comment.value = ''
+    if (comment.trim().length !== 0) {
+      dispatch(addComment(blog.id, comment))
+    }
+  }
+
 
   return (
-    <div >
-      <div key={blog.id} style={blogStyle} className='blog'>
-        <div onClick={toggleVisiblity}>
-          {blog.title} {blog.author}
+    <div key={blog.id} className='blog' >
+      <Segment>
+        <h3>{blog.title} by {blog.author} </h3>
+        <div>
+          <a href={blog.url}>{blog.url}</a>
         </div>
-        <div style={showWhenVisible} className="togglableContent">
-          {blog.url} <br />
-          {blog.likes} likes
-          <button onClick={() => handleLikeClick(blog)}>like</button><br />
-          added by {blog.user.name}<br />
-          <div style={toggleRemoveButton(blog)}>
-            <button onClick={() => handleBlogRemove(blog)}>remove</button>
+        <div>
+          added by {blog.user.name}
+        </div>
+        <div>{blog.likes} likes</div>
+
+        <Grid columns={3}>
+          <Grid.Row>
+            <Grid.Column>
+              <Button size='small' onClick={() => handleLikeClick(blog)}>
+                <Icon name='thumbs up' />like
+              </Button>
+            </Grid.Column>
+            <Grid.Column textAlign='center'>
+              <Button size='small' onClick={() => toggleVisiblity()}>
+                <Icon name='comment' />comment
+              </Button>
+            </Grid.Column>
+            <Grid.Column textAlign='right'>
+              <div style={toggleRemoveButton(blog)}>
+                <Button inverted color='red' size='small' onClick={() => handleBlogRemove(blog)}>
+                  <Icon name='remove circle' />remove
+                </Button>
+              </div>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+        <Segment>
+          <div style={{ display: visible ? 'none' : '' }}>
+            <Form onSubmit={addNewComment}>
+              <Form.Field>
+                <label>Add comment</label>
+                <Form.Input name='comment' />
+                <Button type="submit">
+                  submit
+                </Button>
+              </Form.Field>
+            </Form>
           </div>
-        </div>
-      </div>
-    </div>
+          {commentsToShow}
+        </Segment>
+      </Segment>
+    </div >
   )
 }
 
-const mapStateToProps = (state) => {
-  return {
-    blogs: state.blogs,
-    notification: state.notification,
-    user: state.user
-  }
-}
-
-BlogList.propTypes = {
-  blog: PropTypes.object,
-  user: PropTypes.object,
-  handleBlogChange: PropTypes.func,
-  handleRemoveClick: PropTypes.func
-}
-
-export default connect(
-  mapStateToProps,
-  {
-    removeBlog,
-    updateBlog
-  }
-)(BlogList)
+const Blog = withRouter(BlogNoHistory)
+export default Blog
